@@ -1,0 +1,31 @@
+{
+  "name": "rmdb",
+  "version": "1.0.0",
+  "description": "Rick and Mort Db",
+  "main": "index.tsx",
+  "scripts": {
+    "test": "react-scripts.test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Viapatis/RMdb.git"
+  },
+  "keywords": [
+    "ts"
+  ],
+  "author": "Andrew Kiselev",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Viapatis/RMdb/issues"
+  },
+  "homepage": "https://github.com/Viapatis/RMdb#readme",
+  "dependencies": {
+    "@types/jest": "^27.0.2",
+    "@types/node": "^16.10.3",
+    "@types/react": "^17.0.27",
+    "@types/react-dom": "^17.0.9",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "typescript": "^4.4.3"
+  }
+}
