@@ -7,8 +7,10 @@ export const Main: FC<{}> = props => {
     const history = useHistory();
     useEffect(() => {
         history.listen((location) => {
-            const locactionPage = location.pathname.split('/')[1];
-            
+            const urlPathWord = location.pathname.split('/');
+            if (urlPathWord.length > 1)
+                const locactionPage = ;
+
         })
         return () => {
 
