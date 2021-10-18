@@ -9,7 +9,8 @@ import {
     QueryParams,
     getQueryType,
     InfoWrap,
-    QueryType
+    QueryType,
+    checkInfo
 } from '../../lib/apiCall'
 interface RequestWrap<T> {
     info: {
@@ -93,17 +94,18 @@ export const getLocationsById = createAsyncThunk<
 export const getEpisodes = createAsyncThunk<
     {
         type: QueryType,
-        response: EpisodeData | EpisodeData[] | InfoWrap<EpisodeData>
+        response: EpisodeData | EpisodeData[] | InfoWrap<EpisodeData>,
+        oldData: EpisodeData[]
     },
-    QueryParams,
+    { episodesData: EpisodeData[], params: QueryParams },
     { rejectValue: Error }
 >(
     'main/fetchEpisodes',
-    async (query: QueryParams, thunkAPI) => {
+    async ({ params, episodesData }, thunkAPI) => {
         try {
-            const type = getQueryType(query) as QueryType;
-            const response = await getData('episode', query);
-            return { type: type, response: response };
+            const type = getQueryType(params) as QueryType;
+            const response = await getData('episode', params);
+            return { type: type, response: response, oldData: episodesData };
         }
         catch (err) {
             return thunkAPI.rejectWithValue(err as Error);
@@ -197,7 +199,7 @@ const counterSlice = createSlice({
             }
         })
         builder.addCase(getEpisodes.fulfilled, (state, action) => {
-            const { type, response } = action.payload;
+            const { type, response, oldData } = action.payload;
             let newEpisodeParams = {
                 episodes: {
                     data: [] as EpisodeData[],
@@ -211,12 +213,17 @@ const counterSlice = createSlice({
             if (type === 'array')
                 newEpisodeParams.episodes.data = response as EpisodeData[];
             if (type === 'filtring-object') {
-                newEpisodeParams.episodes.data = (response as InfoWrap<EpisodeData>).results;
-                newEpisodeParams.info = (response as InfoWrap<EpisodeData>).info as InfoWrap<EpisodeData>['info'];
+                const { results, info } = response as InfoWrap<EpisodeData>;
+                newEpisodeParams.episodes.data = results;
+                newEpisodeParams.info = info;
             }
             if (type === 'single')
                 newEpisodeParams.episodes.data = [response as EpisodeData]
             newEpisodeParams.episodes.data = replaceUrlsWithIds('episode', newEpisodeParams.episodes.data);
+            if ('info' in newEpisodeParams)
+                if (checkInfo(state.info, newEpisodeParams.info))
+                    newEpisodeParams.episodes.data = [...oldData, ...newEpisodeParams.episodes.data];
+
             state = {
                 ...state,
                 ...newEpisodeParams

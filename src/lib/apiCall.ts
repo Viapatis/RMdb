@@ -43,7 +43,7 @@ export interface LocationData extends GenPropObj {
 export interface LocationFilters extends GenFilterObj {
     demension?: string
 }
-export interface EpisodeData {
+export interface EpisodeData extends GenPropObj {
     air_date: string,
     episode: string,
     characters: string[] | number[]
@@ -163,4 +163,7 @@ export function replaceUrlsWithIds(endPoint: EndPoint, data: LocationData | Char
 }
 export function getIdFromUrl(url: string) {
     return +url.split('/').slice(-1)[0];
+}
+export function checkInfo(info1: InfoWrap<void>['info'], info2: InfoWrap<void>['info']): boolean {
+    return info1?.next === info2?.prev && info1?.count === info2?.count && info1?.pages === info2?.pages;
 }

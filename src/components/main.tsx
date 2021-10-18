@@ -3,9 +3,13 @@ import { Switch, Route, useLocation, useHistory } from 'react-router-dom';
 import { getCharactersById, getLocationsById, getEpisodes } from '../store/slices/main'
 import Page from './Page';
 import { unwrapResult } from '@reduxjs/toolkit'
-import { getIdFromUrl, EpisodeData } from '../lib/apiCall'
+import { QueryParams, EpisodeData } from '../lib/apiCall'
 import { useAppSelector, useAppDispatch } from '../store/hooks'
-
+import { SearchAndFilter } from './SearchAndFilter';
+const getEpisodesConcat = (param?: QueryParams) => {
+    const episodes = useAppSelector(state => state.main.episodes);
+    return getEpisodes({ episodesData: episodes.data, params: param });
+}
 export const Main: FC<{}> = props => {
     const history = useHistory();
     const dispatch = useAppDispatch();
@@ -18,7 +22,7 @@ export const Main: FC<{}> = props => {
                 const id = +urlPathWord[2];
                 switch (urlPathWord[1]) {
                     case 'episode':
-                        result = await dispatch(getEpisodes(id));
+                        result = await dispatch(getEpisodesConcat(id));
                         if (getEpisodes.fulfilled.match(result)) {
                             const episode = unwrapResult(result).response as EpisodeData;
                             await dispatch(getCharactersById(episode.characters as number[]));
@@ -43,15 +47,20 @@ export const Main: FC<{}> = props => {
             }
             else if (pathname.match(/\//)) {
                 console.log('Home');
-                getEpisodes();
+                dispatch(getEpisodesConcat());
             }
         })
-        dispatch(getEpisodes());
+        dispatch(getEpisodesConcat());
     });
     return (
         <main className='main' style={{ height: '100%' }}>
             <Switch>
-                <Route exact path='/'><Page></Page></Route>
+                <Route exact path='/'>
+                    <Page>
+                        <SearchAndFilter />
+                        
+                    </Page>
+                </Route>
                 <Route path='/episode'><Page></Page></Route>
                 <Route path='/character'><Page></Page></Route>
                 <Route path='/location'><Page></Page></Route>
