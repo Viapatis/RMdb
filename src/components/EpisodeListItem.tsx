@@ -26,3 +26,4 @@ const EpisodeListItem: FC<EpisodeListItemProps> = props => {
         </li>
     )
 }
+export default EpisodeListItem;
