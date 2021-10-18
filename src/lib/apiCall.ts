@@ -8,8 +8,10 @@ export interface Origin {
     url: string
 }
 export interface GenPropObj extends Origin {
+    [index: string]: any,
     id: number,
-    created: string
+    created: string,
+    error?: string
 }
 
 export interface CharacterData extends GenPropObj {
@@ -23,6 +25,7 @@ export interface CharacterData extends GenPropObj {
     episode: string[] | number[]
 }
 export interface GenFilterObj {
+    [index: string]: string | undefined;
     name?: string,
     type?: string,
     page?: string,
@@ -48,7 +51,7 @@ export interface EpisodeData {
 export interface EpisodeFilters extends Pick<GenFilterObj, 'name'> {
     episode?: string
 }
-export interface InfoWrap<T> {
+export interface InfoWrap<T> extends Pick<GenPropObj, 'error'> {
     info?: {
         count: number,
         pages: number,
@@ -106,6 +109,7 @@ export async function getData(endPoint: 'location'): Promise<InfoWrap<LocationDa
 export async function getData(endPoint: 'episode'): Promise<InfoWrap<EpisodeData>>;
 export async function getData(endPoint: EndPoint, query?: QueryParams) {
     const queryType = getQueryType(query);
+    console.log()
     if (queryType === 'inavlid')
         throw new Error('getData failed.\tInvalid QueryParams')
     const queryString = createQueryString(query, queryType);
@@ -127,20 +131,29 @@ export async function getData(endPoint: EndPoint, query?: QueryParams) {
 export function replaceUrlsWithIds(endPoint: 'character', data: CharacterData): CharacterData;
 export function replaceUrlsWithIds(endPoint: 'location', data: LocationData): LocationData;
 export function replaceUrlsWithIds(endPoint: 'episode', data: EpisodeData): EpisodeData;
-export function replaceUrlsWithIds(endPoint: EndPoint, data: LocationData | CharacterData | EpisodeData) {
-    const dataWithoutUrls = { ...data };
+export function replaceUrlsWithIds(endPoint: 'character', data: CharacterData[]): CharacterData[];
+export function replaceUrlsWithIds(endPoint: 'location', data: LocationData[]): LocationData[];
+export function replaceUrlsWithIds(endPoint: 'episode', data: EpisodeData[]): EpisodeData[];
+export function replaceUrlsWithIds(endPoint: EndPoint, data: LocationData | CharacterData | EpisodeData | EpisodeData[] | CharacterData[] | LocationData[]) {
     switch (endPoint) {
         case 'character':
+            if (Array.isArray(data))
+                return data.map(item => replaceUrlsWithIds(endPoint, item as CharacterData));
             return {
                 ...data,
                 episode: (data as CharacterData).episode.map((url) => getIdFromUrl(url as string))
             } as CharacterData;
         case 'location':
+            if (Array.isArray(data))
+                return data.map(item => replaceUrlsWithIds(endPoint, item as LocationData));
             return {
                 ...data,
+
                 residents: (data as LocationData).residents.map((url) => getIdFromUrl(url as string))
             } as LocationData;
         case 'episode':
+            if (Array.isArray(data))
+                return data.map(item => replaceUrlsWithIds(endPoint, item as EpisodeData));
             return {
                 ...data,
                 characters: (data as EpisodeData).characters.map((url) => getIdFromUrl(url as string))
@@ -148,6 +161,6 @@ export function replaceUrlsWithIds(endPoint: EndPoint, data: LocationData | Char
 
     }
 }
-function getIdFromUrl(url: string) {
-    return +url.split('/')[-1];
+export function getIdFromUrl(url: string) {
+    return +url.split('/').slice(-1)[0];
 }
