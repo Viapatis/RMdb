@@ -1,18 +1,18 @@
 const ROOT_URL = 'https://rickandmortyapi.com/api';
-type QueryType = 'single' | 'array' | 'filtring-object';
-type EndPoint = 'location' | 'character' | 'episode';
-type CharacterStatus = 'Alive' | 'Dead' | 'unknown';
-type CharacterGender = 'Female' | 'Male' | 'Genderless' | 'unknown';
-interface Origin {
+export type QueryType = 'single' | 'array' | 'filtring-object';
+export type EndPoint = 'location' | 'character' | 'episode';
+export type CharacterStatus = 'Alive' | 'Dead' | 'unknown';
+export type CharacterGender = 'Female' | 'Male' | 'Genderless' | 'unknown';
+export interface Origin {
     name: string,
     url: string
 }
-interface GenPropObj extends Origin {
+export interface GenPropObj extends Origin {
     id: number,
     created: string
 }
 
-interface CharactersData extends GenPropObj {
+export interface CharacterData extends GenPropObj {
     status: CharacterStatus,
     species: string,
     type: string,
@@ -20,32 +20,32 @@ interface CharactersData extends GenPropObj {
     origin: Origin,
     location: Origin,
     image: string,
-    episode: string[]
+    episode: string[] | number[]
 }
-interface GenFilterObj {
+export interface GenFilterObj {
     name?: string,
     type?: string,
     page?: string,
 }
-interface CharactersFilter extends GenFilterObj {
+export interface CharactersFilter extends GenFilterObj {
     status?: CharacterStatus,
     gender?: CharacterGender,
     species?: string
 }
-interface LocationData extends GenPropObj {
+export interface LocationData extends GenPropObj {
     type: string,
     demension: string,
-    residents: string[]
+    residents: string[] | number[]
 }
-interface LocationFilters extends GenFilterObj {
+export interface LocationFilters extends GenFilterObj {
     demension?: string
 }
 export interface EpisodeData {
     air_date: string,
     episode: string,
-    characters: string[]
+    characters: string[] | number[]
 }
-interface EpisodeFilters extends Pick<GenFilterObj, 'name'> {
+export interface EpisodeFilters extends Pick<GenFilterObj, 'name'> {
     episode?: string
 }
 export interface InfoWrap<T> {
@@ -55,10 +55,10 @@ export interface InfoWrap<T> {
         next: string,
         prev: string
     },
-    results: T
+    results: T[]
 }
-type FilterParams = CharactersFilter | EpisodeFilters | LocationFilters;
-type QueryParams = FilterParams | number | number[];
+export type FilterParams = CharactersFilter | EpisodeFilters | LocationFilters;
+export type QueryParams = FilterParams | number | number[] | undefined;
 function createQueryString(query: QueryParams, type: QueryType) {
     switch (type) {
         case 'filtring-object':
@@ -67,16 +67,17 @@ function createQueryString(query: QueryParams, type: QueryType) {
             return `${query}`
     }
 }
-function getQueryType(query: QueryParams): QueryType | 'undefined' {
-    if (typeof query === 'number') {
+export function getQueryType(query: QueryParams): QueryType | 'inavlid' {
+    if (typeof query === 'number')
         return 'single';
-    } else if (Array.isArray(query) && query.every(num => typeof num === 'number')) {
+    if (typeof query === 'undefined')
+        return 'filtring-object'
+    if (Array.isArray(query) && query.every(num => typeof num === 'number'))
         return 'array'
-    } else if (!Array.isArray(query)) {
-        return `filtring-object`
-    } else {
-        return `undefined`;
-    }
+    if (Object.keys(query).every(key => typeof key === 'string') && !Array.isArray(query))
+        if (Object.keys(query).every(key => typeof (query as Record<string, string>)[key] === 'string'))
+            return `filtring-object`
+    return `inavlid`;
 }
 function getResponseType<Type>(type: QueryType, response: Promise<any>) {
     switch (type) {
@@ -88,26 +89,32 @@ function getResponseType<Type>(type: QueryType, response: Promise<any>) {
             return response as Promise<Type>
     }
 }
-export async function getData(endPoint: 'character', query: FilterParams): Promise<InfoWrap<CharactersData>>;
+export async function getData(endPoint: 'character', query: FilterParams): Promise<InfoWrap<CharacterData>>;
 export async function getData(endPoint: 'location', query: FilterParams): Promise<InfoWrap<LocationData>>;
 export async function getData(endPoint: 'episode', query: FilterParams): Promise<InfoWrap<EpisodeData>>;
-export async function getData(endPoint: 'character', query: number): Promise<CharactersData>;
+export async function getData(endPoint: 'character', query: number): Promise<CharacterData>;
 export async function getData(endPoint: 'location', query: number): Promise<LocationData>;
 export async function getData(endPoint: 'episode', query: number): Promise<EpisodeData>;
-export async function getData(endPoint: 'character', query: number[]): Promise<CharactersData[]>;
+export async function getData(endPoint: 'character', query: number[]): Promise<CharacterData[]>;
 export async function getData(endPoint: 'location', query: number[]): Promise<LocationData[]>;
 export async function getData(endPoint: 'episode', query: number[]): Promise<EpisodeData[]>;
-export async function getData(endPoint: EndPoint, query: QueryParams) {
+export async function getData(endPoint: 'episode', query?: QueryParams): Promise<InfoWrap<EpisodeData> | EpisodeData[] | EpisodeData>;
+export async function getData(endPoint: 'character', query?: QueryParams): Promise<InfoWrap<CharacterData> | CharacterData[] | CharacterData>;
+export async function getData(endPoint: 'location', query?: QueryParams): Promise<InfoWrap<LocationData> | LocationData[] | LocationData>;
+export async function getData(endPoint: 'character'): Promise<InfoWrap<CharacterData>>;
+export async function getData(endPoint: 'location'): Promise<InfoWrap<LocationData>>;
+export async function getData(endPoint: 'episode'): Promise<InfoWrap<EpisodeData>>;
+export async function getData(endPoint: EndPoint, query?: QueryParams) {
     const queryType = getQueryType(query);
-    if (queryType === 'undefined')
-        throw new Error('`getData failed.\tInvalid QueryParams')
+    if (queryType === 'inavlid')
+        throw new Error('getData failed.\tInvalid QueryParams')
     const queryString = createQueryString(query, queryType);
     const response = await fetch(`${ROOT_URL}/${endPoint}/${queryString}`);
     if (response.ok) {
         const data = response.json();
         switch (endPoint) {
             case 'character':
-                return getResponseType<CharactersData>(queryType, data);
+                return getResponseType<CharacterData>(queryType, data);
             case 'episode':
                 return getResponseType<EpisodeData>(queryType, data);
             case 'location':
@@ -116,4 +123,31 @@ export async function getData(endPoint: EndPoint, query: QueryParams) {
     } else {
         throw new Error(`getData failed.\t${response.statusText}`);
     }
+}
+export function replaceUrlsWithIds(endPoint: 'character', data: CharacterData): CharacterData;
+export function replaceUrlsWithIds(endPoint: 'location', data: LocationData): LocationData;
+export function replaceUrlsWithIds(endPoint: 'episode', data: EpisodeData): EpisodeData;
+export function replaceUrlsWithIds(endPoint: EndPoint, data: LocationData | CharacterData | EpisodeData) {
+    const dataWithoutUrls = { ...data };
+    switch (endPoint) {
+        case 'character':
+            return {
+                ...data,
+                episode: (data as CharacterData).episode.map((url) => getIdFromUrl(url as string))
+            } as CharacterData;
+        case 'location':
+            return {
+                ...data,
+                residents: (data as LocationData).residents.map((url) => getIdFromUrl(url as string))
+            } as LocationData;
+        case 'episode':
+            return {
+                ...data,
+                characters: (data as EpisodeData).characters.map((url) => getIdFromUrl(url as string))
+            } as EpisodeData;
+
+    }
+}
+function getIdFromUrl(url: string) {
+    return +url.split('/')[-1];
 }
