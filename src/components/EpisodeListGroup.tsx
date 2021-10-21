@@ -4,9 +4,10 @@ import { useAppSelector } from '../store/hooks'
 import { getSeasonsAndEpisode, EpisodeData } from '../lib/apiCall';
 const EpisodeListGroup: FC<{}> = props => {
     const episodesData = useAppSelector(state => state.episodes.data);
+    const sort = useAppSelector(state => state.filter.episode.sort);
     const seasons = new Set(episodesData.map(episodeData => getSeasonsAndEpisode(episodeData.episode).season));
-    const seasonsData = getSeasons(Array.from(seasons.values()), episodesData);
-    console.log(seasonsData);
+    const seasonsData = sortEpisodes(sort, getSeasons(Array.from(seasons.values()), episodesData));
+
     return (
         <div className='episode-list-group'>
             {seasonsData.map((seasonData, i) => <EpisodeList key={`S${i}`} seasonName={i + 1 + ''} data={seasonData} />)}
@@ -30,5 +31,12 @@ function getSeasons(seasons: string[], episodesData: EpisodeData[]) {
         seasonsData.push(episodesData.slice(rightBorders[i - 1], rightBorders[i]))
     }
     return seasonsData;
+}
+function sortEpisodes(string: 'name' | 'relese', episodesData: EpisodeData[][]) {
+    episodesData.forEach(arr => arr.sort(string === 'name' ?
+        undefined :
+        (a, b) => (new Date(a.air_date).getTime() - new Date(b.air_date).getTime())
+    ));
+    return episodesData;
 }
 export default EpisodeListGroup;

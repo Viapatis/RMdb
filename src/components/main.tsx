@@ -5,14 +5,16 @@ import { getLocationsById } from '../store/slices/Llocations'
 import { getEpisodes } from '../store/slices/Episodes'
 import Page from './Page';
 import { unwrapResult } from '@reduxjs/toolkit'
-import { QueryParams, EpisodeData } from '../lib/apiCall'
+import { EpisodeData } from '../lib/apiCall'
 import { useAppSelector, useAppDispatch } from '../store/hooks'
-import SearchAndFilter from './SearchAndFilter';
+import SearchAndSort from './SearchAndFilter';
 import EpisodeListGroup from './EpisodeListGroup';
+import { setFilter } from '../store/slices/Filter'
 export const Main: FC<{}> = props => {
     const history = useHistory();
     const dispatch = useAppDispatch();
-    const episodesData = useAppSelector(state => state.episodes.data)
+    const episodesData = useAppSelector(state => state.episodes.data);
+    const filterEpisodes = useAppSelector(state => state.filter.episode.value)
     useEffect(() => {
         history.listen(async (location) => {
             const pathname = location.pathname;
@@ -46,8 +48,10 @@ export const Main: FC<{}> = props => {
                 }
             }
             else if (pathname.match(/\//)) {
-                console.log('Home');
-                dispatch(getEpisodes({ episodesData: episodesData }));
+                const result = await dispatch(getEpisodes({ params: filterEpisodes, episodesData: episodesData }));
+                if (getEpisodes.fulfilled.match(result)) {
+                    setFilter({ name: 'episode' })
+                }
             }
         })
     });
@@ -56,7 +60,7 @@ export const Main: FC<{}> = props => {
             <Switch>
                 <Route exact path='/'>
                     <Page>
-                        <SearchAndFilter />
+                        <SearchAndSort />
                         <EpisodeListGroup />
                     </Page>
                 </Route>

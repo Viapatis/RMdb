@@ -1,7 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import {
-    LocationData,
-    CharacterData,
     EpisodeData,
     getData,
     replaceUrlsWithIds,
@@ -26,21 +24,6 @@ const initialState = {
         prev: ''
     }
 } as BaseState<EpisodeData>
-export const getCharactersById = createAsyncThunk<
-    CharacterData[],
-    number[],
-    { rejectValue: Error }
->(
-    'main/fetchCharactersById',
-    async (userId: number[], thunkAPI) => {
-        try {
-            const response = await getData('character', userId);
-            return replaceUrlsWithIds('character', response);
-        } catch (err) {
-            return thunkAPI.rejectWithValue(err as Error);
-        }
-    }
-)
 
 export const getEpisodes = createAsyncThunk<
     {
@@ -109,13 +92,6 @@ const episodesSlice = createSlice({
             state.requestInfo = {
                 status: action.meta.requestStatus,
                 err: '',
-                curId: action.meta.requestId
-            }
-        })
-        builder.addCase(getCharactersById.rejected, (state, action) => {
-            state.requestInfo = {
-                status: action.meta.requestStatus,
-                err: action.error.message + '',
                 curId: action.meta.requestId
             }
         })

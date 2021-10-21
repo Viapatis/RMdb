@@ -10,13 +10,13 @@ interface EpisodeListItemProps {
 
 const EpisodeListItem: FC<EpisodeListItemProps> = props => {
     const { id, air_date, episode, name } = props;
+    const history = useHistory();
     const episodeNumber = getSeasonsAndEpisode(episode).episode;
-    const useHandleEpisodeListItemClick = () => {
-        const history = useHistory();
+    const handleEpisodeListItemClick = () => {
         history.push(`/episode/${id}`);
     }
     return (
-        <li className='list-item' onClick={useHandleEpisodeListItemClick}>
+        <li className='list-item' onClick={handleEpisodeListItemClick}>
             <div className='info-group'>
                 <div className='list-item-number'>{episodeNumber}</div>
                 <div className='list-item-name'>{name}</div>

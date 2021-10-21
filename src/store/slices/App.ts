@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import PROJECT_INFO from '../../projectDef';
 export interface AppState {
     projectInfo: typeof PROJECT_INFO
