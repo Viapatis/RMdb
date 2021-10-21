@@ -21,8 +21,8 @@ const SearchAndSort: FC<{}> = props => {
                 <button>Serch</button>
             </div>
             <select value={sort} onChange={handleSortOnChange}>
-                <option value='name'></option>
-                <option value='relese'></option>
+                <option value='name'>name</option>
+                <option value='relese'>relese</option>
             </select>
         </div>
     );
