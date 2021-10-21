@@ -1,5 +1,5 @@
 import { FC, useEffect } from 'react';
-import { getEpisodes } from '../store/slices/episodes'
+import { getEpisodes } from '../store/slices/Episodes'
 import Main from './Main';
 import { useAppSelector, useAppDispatch } from '../store/hooks'
 export const App: FC<{}> = props => {

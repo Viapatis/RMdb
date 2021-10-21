@@ -4,7 +4,7 @@ import {
     getData,
     replaceUrlsWithIds,
 } from '../../lib/apiCall';
-import { BaseState } from './interfaces';
+import { BaseState } from '.Interfaces';
 const initialState = {
     requestInfo: {
         status: '',

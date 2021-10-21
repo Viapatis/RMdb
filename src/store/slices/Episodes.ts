@@ -11,7 +11,7 @@ import {
     QueryType,
     checkInfo
 } from '../../lib/apiCall'
-import { BaseState } from './interfaces';
+import { BaseState } from './Interfaces';
 const initialState = {
     requestInfo: {
         status: '',
