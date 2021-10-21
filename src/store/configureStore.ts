@@ -2,7 +2,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 
 import app from './slices/App';
-import characters from './slices/characters';
+import characters from './slices/Characters';
 import locations from './slices/Llocations';
 import episodes from './slices/Episodes';
 
