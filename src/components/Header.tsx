@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { useAppSelector, useAppDispatch } from '../store/hooks'
 import logo from  '../logo.png'
 const Header: FC<{}> = props => {
-    const name = useAppSelector(state => state.main.projectInfo.name)
+    const name = useAppSelector(state => state.app.projectInfo.name)
     return (
         <div className='header'>
             <div className='header_logo-and-name'>

@@ -1,6 +1,6 @@
-import * as React from 'react';
+import { FC } from 'react';
 
-const Characters: React.FC<{}> = props => {
+const Characters: FC<{}> = props => {
     return (
         <div></div>
     );

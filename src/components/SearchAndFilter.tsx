@@ -1,6 +1,6 @@
-import {FC} from 'react';
+import { FC } from 'react';
 import { useAppSelector, useAppDispatch } from '../store/hooks'
-export const SearchAndFilter: React.FC<{}> = props => {
+const SearchAndFilter: FC<{}> = props => {
     return (
         <div>
             <div>
@@ -13,3 +13,4 @@ export const SearchAndFilter: React.FC<{}> = props => {
         </div>
     );
 }
+export default SearchAndFilter;

@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import { useHistory } from "react-router-dom";
 import EpisodeListItem from './EpisodeListItem';
 import { EpisodeData } from '../lib/apiCall';
 interface EpisodeListProps {

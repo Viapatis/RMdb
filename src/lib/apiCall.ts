@@ -167,3 +167,7 @@ export function getIdFromUrl(url: string) {
 export function checkInfo(info1: InfoWrap<void>['info'], info2: InfoWrap<void>['info']): boolean {
     return info1?.next === info2?.prev && info1?.count === info2?.count && info1?.pages === info2?.pages;
 }
+export function getSeasonsAndEpisode(episodeAndStr: string) {
+    const matchArray = episodeAndStr.match(/S(\d+)E(\d+)/) as RegExpMatchArray;
+    return { episode: matchArray[2], season: matchArray[1] }
+}

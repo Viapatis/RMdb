@@ -1,11 +1,13 @@
 
 import { configureStore } from '@reduxjs/toolkit'
 
-import main from './slices/main'
-import { MainState } from './slices/main'
+import app from './slices/App';
+import characters from './slices/characters';
+import locations from './slices/Llocations';
+import episodes from './slices/Episodes';
 
 const store = configureStore({
-  reducer: { main },
+  reducer: { app, episodes, characters, locations },
   devTools: process.env.NODE_ENV !== 'production'
 })
 export type RootState = ReturnType<typeof store.getState>
