@@ -1,6 +1,6 @@
 import { FC, useEffect } from 'react';
 import { Switch, Route, useLocation, useHistory } from 'react-router-dom';
-import { getCharactersById } from '../store/slices/characters'
+import { getCharactersById } from '../store/slices/Characters'
 import { getLocationsById } from '../store/slices/Llocations'
 import { getEpisodes } from '../store/slices/Episodes'
 import Page from './Page';
