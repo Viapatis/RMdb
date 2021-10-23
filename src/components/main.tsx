@@ -1,62 +1,68 @@
-import { FC, useEffect } from 'react';
-import { Switch, Route, useLocation, useHistory } from 'react-router-dom';
-import { getCharactersById } from '../store/slices/Characters'
-import { getLocationsById } from '../store/slices/Llocations'
-import { getEpisodes } from '../store/slices/Episodes'
+import { FC, useEffect, UIEvent, useRef } from 'react';
+import { Switch, Route, useHistory } from 'react-router-dom';
+import { getCharactersWithLocation, getLocationsWithCharacters, getEpisodesByFilter, getEpisodeWithCharacters } from '../store/slices/Main'
 import Page from './Page';
-import { unwrapResult } from '@reduxjs/toolkit'
-import { EpisodeData } from '../lib/apiCall'
+import { genQueryObj } from '../lib/tools'
 import { useAppSelector, useAppDispatch } from '../store/hooks'
 import SearchAndSort from './SearchAndFilter';
 import EpisodeListGroup from './EpisodeListGroup';
-import { setFilter } from '../store/slices/Filter'
+import { setLoadAllowed } from '../store/slices/Main'
 export const Main: FC<{}> = props => {
     const history = useHistory();
     const dispatch = useAppDispatch();
-    const episodesData = useAppSelector(state => state.episodes.data);
-    const filterEpisodes = useAppSelector(state => state.filter.episode.value)
+    const info = useAppSelector(state => state.main.info);
+    const loadAllowed = useAppSelector(state => state.main.loadAllowed);
+    const onScrollMain = (event: UIEvent<HTMLDivElement>) => {
+        const divMain = (event.target as HTMLDivElement);
+        const { scrollHeight, scrollTop, clientHeight } = divMain;
+        if (scrollTop > scrollHeight - clientHeight - 1)
+            if (info.next)
+                history.push(`/?page=${info.next}`)
+    }
+    console.log(loadAllowed);
     useEffect(() => {
-        history.listen(async (location) => {
-            const pathname = location.pathname;
+        const unlistenHistory = history.listen(async (location) => {
+            const { pathname, search } = location;
             const urlPathWord = pathname.split('/');
             if (location.pathname.match(/^\/(episode|location|character)\/\d+$/)) {
-                let result;
                 const id = +urlPathWord[2];
                 switch (urlPathWord[1]) {
                     case 'episode':
-                        result = await dispatch(getEpisodes({ episodesData: episodesData, params: id }));
-                        if (getEpisodes.fulfilled.match(result)) {
-                            const episode = unwrapResult(result).response as EpisodeData;
-                            await dispatch(getCharactersById(episode.characters as number[]));
-                        }
+                        dispatch(getEpisodeWithCharacters(id));
                         break;
                     case 'location':
-                        result = await dispatch(getLocationsById([id]));
-                        if (getLocationsById.fulfilled.match(result)) {
-                            const locationData = (unwrapResult(result))[0];
-                            await dispatch(getCharactersById(locationData.residents as number[]));
-                        }
+                        dispatch(getLocationsWithCharacters(id));
                         break;
                     case 'character':
-                        result = await dispatch(getCharactersById([id]));
-                        if (getCharactersById.fulfilled.match(result)) {
-                            const character = unwrapResult(result)[0];
-                        }
+                        getCharactersWithLocation(id);
                         break;
                     default:
                         break;
                 }
             }
-            else if (pathname.match(/\//)) {
-                const result = await dispatch(getEpisodes({ params: filterEpisodes, episodesData: episodesData }));
-                if (getEpisodes.fulfilled.match(result)) {
-                    setFilter({ name: 'episode' })
+            else if (pathname.match(/^\/$/)) {
+                const searchMatch = search.match(/^\?(\w+=\w+&?)+/);
+                if (searchMatch) {
+                    const query = genQueryObj(searchMatch[1]);
+                    await dispatch(getEpisodesByFilter(query));
+                }
+                else {
+                    dispatch(getEpisodesByFilter());
+                    dispatch(setLoadAllowed(true));
                 }
             }
         })
+        return () => {
+            unlistenHistory()
+        };
     });
+
     return (
-        <div className='main' style={{ height: '100%' }}>
+        <div
+            className='main'
+            style={{ height: window.innerHeight, overflow: 'auto' }}
+            onScroll={loadAllowed ? onScrollMain : undefined}
+        >
             <Switch>
                 <Route exact path='/'>
                     <Page>
@@ -71,4 +77,5 @@ export const Main: FC<{}> = props => {
         </div>
     );
 };
+
 export default Main;

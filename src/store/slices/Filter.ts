@@ -1,21 +1,21 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { EpisodeFilters, EndPoint } from '../../lib/apiCall';
+import { EndPoint } from '../../lib/apiTypes';
 export type sortValue = 'name' | 'relese';
-interface Filter<T> {
+interface Filter {
     search: string,
     sort: sortValue,
-    value?: T
+    btnValue: boolean
 }
 interface FilterState {
-    [index: string]: Filter<EpisodeFilters>,
-    episode: Filter<EpisodeFilters>
+    [index: string]: Filter,
+    episode: Filter
 }
 const initialState = {
     episode: {
         search: '',
         sort: 'relese',
-        value: {}
-    } as Filter<EpisodeFilters>
+        btnValue: true
+    } as Filter
 } as FilterState;
 
 const filterSlice = createSlice({
@@ -32,12 +32,12 @@ const filterSlice = createSlice({
             if (name in state)
                 state[name].sort = value;
         },
-        setFilter(state, action: PayloadAction<{ name: EndPoint, value?: EpisodeFilters }>) {
+        setBtnValue(state, action: PayloadAction<{ name: EndPoint, value: boolean }>) {
             const { name, value } = action.payload;
             if (name in state)
-                state[name].value = value;
-        }
+                state[name].btnValue = !value;
+        },
     }
 })
-export const { setSerachString, setFilter, setSortString } = filterSlice.actions;
+export const { setSerachString, setBtnValue, setSortString } = filterSlice.actions;
 export default filterSlice.reducer;

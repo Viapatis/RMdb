@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { useHistory } from "react-router-dom";
-import { getSeasonsAndEpisode } from '../lib/apiCall';
+import { getSeasonsAndEpisode } from '../lib/tools';
 interface EpisodeListItemProps {
     id: number,
     air_date: string,

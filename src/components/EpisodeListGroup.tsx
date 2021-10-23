@@ -1,16 +1,17 @@
 import { FC } from 'react';
 import EpisodeList from './EpisodeList';
 import { useAppSelector } from '../store/hooks'
-import { getSeasonsAndEpisode, EpisodeData } from '../lib/apiCall';
+import { getSeasonsAndEpisode } from '../lib/tools';
+import {EpisodeData} from '../lib/apiTypes'
 const EpisodeListGroup: FC<{}> = props => {
-    const episodesData = useAppSelector(state => state.episodes.data);
+    const episodesData = useAppSelector(state => state.main.episodes);
     const sort = useAppSelector(state => state.filter.episode.sort);
-    const seasons = new Set(episodesData.map(episodeData => getSeasonsAndEpisode(episodeData.episode).season));
+    const seasons = Array.from(new Set(episodesData.map(episodeData => getSeasonsAndEpisode(episodeData.episode).season)).values());
     const seasonsData = sortEpisodes(sort, getSeasons(Array.from(seasons.values()), episodesData));
-    console.log(seasonsData);
+   
     return (
-        <div className='episode-list-group'>
-            {seasonsData.map((seasonData, i) => <EpisodeList key={`S${i}`} seasonName={i + 1 + ''} data={seasonData} />)}
+        <div className='episode-list-group' >
+            {seasonsData.map((seasonData, i) => <EpisodeList key={`S${seasons[i]}`} seasonName={seasons[i]} data={seasonData} />)}
         </div>
 
     )
@@ -30,14 +31,14 @@ function getSeasons(seasons: string[], episodesData: EpisodeData[]) {
     for (let i = 1; i < rightBorders.length; i++) {
         seasonsData.push(episodesData.slice(rightBorders[i - 1], rightBorders[i]))
     }
-    return seasonsData;
+    return episodesData.length && episodesData.length > 1 ? seasonsData : [episodesData];
 }
 function sortEpisodes(string: 'name' | 'relese', episodesData: EpisodeData[][]) {
     episodesData.forEach(arr => arr.sort(string === 'name' ?
         (a, b) => {
             const nameA = a.name.toLowerCase();
             const nameB = b.name.toLowerCase();
-            if (nameA === nameB) 0;
+            if (nameA === nameB) return 0;
             return nameA > nameB ? 1 : -1
         } :
         (a, b) => (new Date(a.air_date).getTime() - new Date(b.air_date).getTime())

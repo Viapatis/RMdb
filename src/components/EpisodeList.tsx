@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import EpisodeListItem from './EpisodeListItem';
-import { EpisodeData } from '../lib/apiCall';
+import { EpisodeData } from '../lib/apiTypes';
 interface EpisodeListProps {
     data: EpisodeData[],
     seasonName: string
