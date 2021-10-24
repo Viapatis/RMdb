@@ -1,0 +1,18 @@
+.header-wrap {
+    height: 70px;
+    box-shadow: 0 1px 5px rgb(0 0 0 / 40%);
+}
+
+.header {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.header_logo-and-name {
+    cursor: pointer;
+    display: flex;
+    max-width: 200px;
+    text-align: center;
+    vertical-align: middle;
+    align-items: center;
+}

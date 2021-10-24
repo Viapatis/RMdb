@@ -1,5 +1,4 @@
 import {
-    InfoWrap,
     LocationData,
     EpisodeData,
     CharacterData,

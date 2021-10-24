@@ -1,0 +1,46 @@
+.list-item {
+    padding: 0 20px;
+    margin-bottom: 10px;
+}
+
+.info-group {
+    font-size: 14px;
+    border-radius: 4px;
+    box-shadow: 0 1px 8px rgb(0 0 0 / 70%), 0 0 0 1px rgb(0 0 0 / 40%);
+    text-align: center;
+    display: flex;
+}
+
+.base-info:hover {
+    cursor: pointer;
+    box-shadow: 0 1px 8px #00b3cb9c, 0 0 0 1px rgb(0 0 0 / 40%);
+}
+
+.sub-info {
+    color: #9CAEC1;
+    font-size: 12px;
+    box-shadow: none;
+    text-align: right;
+    margin-top: 5px;
+    justify-content: right;
+}
+
+.list-item-number {
+    background: #00b3cb;
+    border-radius: 4px 0 0 4px;
+    color: #fff;
+    padding: 5px;
+}
+
+@media (max-width: 800px) {
+    .info-group {
+        flex-direction: column;
+    }
+    .list-item-number {
+        border-radius:4px 4px 0 0;
+    }
+}
+
+.list-item-name {
+    padding: 5px;
+}

@@ -2,10 +2,11 @@ import { FC, ChangeEvent, MouseEvent, KeyboardEvent } from 'react';
 import { useAppSelector, useAppDispatch } from '../store/hooks';
 import { setSerachString, setSortString, sortValue, setBtnValue } from '../store/slices/Filter'
 import { useHistory } from 'react-router';
-const SearchAndSort: FC<{}> = props => {
+import '../styles/SearchAndFilter.css'
+const SearchAndFilter: FC<{}> = props => {
     const { sort, btnValue, search } = useAppSelector(state => state.filter.episode);
     const err = useAppSelector(state => state.main.requestInfo.err);
-    const displayErr = err === 'Data not found' ? 'block' : 'none';
+    const displayErr = err ? '' : ' hide';
     const history = useHistory();
     const dispatch = useAppDispatch();
     const handleSearchOnChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -22,26 +23,27 @@ const SearchAndSort: FC<{}> = props => {
     const handleSortOnChange = (event: ChangeEvent<HTMLSelectElement>) => {
         dispatch(setSortString({ name: 'episode', value: event.target.value as sortValue }));
     }
-    
+
     return (
-        <div>
-            <div>
-                <div>
+        <div className='serach-and-filter'>
+            <div className='serach-block'>
+                <div className='search-main'>
                     <input
+                        className='serach-string input-text'
                         type='text'
                         value={search}
                         onChange={handleSearchOnChange}
                         onKeyDown={handleInputEnter}
                         placeholder='Enter episode name'></input>
-                    <button onClick={handleBtnClick} value={btnValue + ''}>Serch</button>
+                    <button onClick={handleBtnClick} value={btnValue + ''} className='serch-button button'>Serch</button>
                 </div>
-                <span style={{ display: displayErr }}>Episode with this name was not found</span>
+                <span className={'search-err' + displayErr} >{err}</span>
             </div>
-            <select value={sort} onChange={handleSortOnChange}>
-                <option value='name'>name</option>
-                <option value='relese'>relese</option>
+            <select value={sort} onChange={handleSortOnChange} className='filter-select select'>
+                <option className='filter-option' value='name'>name</option>
+                <option className='filter-option' value='relese'>relese</option>
             </select>
         </div>
     );
 }
-export default SearchAndSort;
+export default SearchAndFilter;

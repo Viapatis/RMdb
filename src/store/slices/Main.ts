@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { EpisodeData, CharacterData, LocationData, EpisodeFilters, QueryParams, InfoWrap, Info } from '../../lib/apiTypes'
+import { EpisodeData, CharacterData, LocationData, EpisodeFilters, InfoWrap, Info } from '../../lib/apiTypes'
 import { replaceUrls, checkInfo } from '../../lib/tools'
 import api from '../../lib/api'
 export interface MainState {

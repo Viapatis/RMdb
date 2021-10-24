@@ -36,7 +36,7 @@ export const getCharactersByFilter = (query?: CharactersFilter) => {
 export const getLocationByFilter = (query: LocationFilters) => {
     return getData('location', query);
 }
-export default {
+const api = {
     getEpisodes: getEpisodes,
     getCharacters: getCharacters,
     getLocations: getLocations,
@@ -50,3 +50,4 @@ export default {
     getCharactersByFilter: getCharactersByFilter,
     getLocationsByFilter: getLocationByFilter
 }
+export default api;

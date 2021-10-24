@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import Header from './Header';
+import '../styles/Page.css';
 const Page: FC<{}> = props => {
     const { children } = { ...props };
     return (

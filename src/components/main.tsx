@@ -1,26 +1,31 @@
-import { FC, useEffect, UIEvent, useRef } from 'react';
+import { FC, useEffect } from 'react';
 import { Switch, Route, useHistory } from 'react-router-dom';
 import { getCharactersWithLocation, getLocationsWithCharacters, getEpisodesByFilter, getEpisodeWithCharacters } from '../store/slices/Main'
 import Page from './Page';
 import { genQueryObj } from '../lib/tools'
 import { useAppSelector, useAppDispatch } from '../store/hooks'
-import SearchAndSort from './SearchAndFilter';
+import SearchAndFilter from './SearchAndFilter';
 import EpisodeListGroup from './EpisodeListGroup';
 import { setLoadAllowed } from '../store/slices/Main'
 export const Main: FC<{}> = props => {
     const history = useHistory();
     const dispatch = useAppDispatch();
     const info = useAppSelector(state => state.main.info);
-    const loadAllowed = useAppSelector(state => state.main.loadAllowed);
-    const onScrollMain = (event: UIEvent<HTMLDivElement>) => {
-        const divMain = (event.target as HTMLDivElement);
-        const { scrollHeight, scrollTop, clientHeight } = divMain;
-        if (scrollTop > scrollHeight - clientHeight - 1)
-            if (info.next)
-                history.push(`/?page=${info.next}`)
+    const {loadAllowed,requestInfo} = useAppSelector(state => state.main);
+    const onScroll = (event: Event) => {
+        if (event.currentTarget) {
+            const scrollingElement = (event.currentTarget as Document).scrollingElement;
+            if (scrollingElement) {
+                const { scrollHeight, scrollTop, clientHeight } = scrollingElement;
+                if (scrollTop > scrollHeight - clientHeight - 1)
+                    if (info.next&&requestInfo.status!=='pending')
+                        history.push(`/?page=${info.next}`)
+            }
+        }
     }
-    console.log(loadAllowed);
     useEffect(() => {
+        if (loadAllowed)
+            document.addEventListener('scroll', onScroll);
         const unlistenHistory = history.listen(async (location) => {
             const { pathname, search } = location;
             const urlPathWord = pathname.split('/');
@@ -53,6 +58,8 @@ export const Main: FC<{}> = props => {
             }
         })
         return () => {
+            if (loadAllowed)
+                document.removeEventListener('scroll', onScroll);
             unlistenHistory()
         };
     });
@@ -60,13 +67,12 @@ export const Main: FC<{}> = props => {
     return (
         <div
             className='main'
-            style={{ height: window.innerHeight, overflow: 'auto' }}
-            onScroll={loadAllowed ? onScrollMain : undefined}
+            style={{ height: '100%' }}
         >
             <Switch>
                 <Route exact path='/'>
                     <Page>
-                        <SearchAndSort />
+                        <SearchAndFilter />
                         <EpisodeListGroup />
                     </Page>
                 </Route>
