@@ -1,4 +1,4 @@
-.list-item {
+.episode-item {
     padding: 0 20px;
     margin-bottom: 10px;
 }
@@ -25,7 +25,7 @@
     justify-content: right;
 }
 
-.list-item-number {
+.episode-item-number {
     background: #00b3cb;
     border-radius: 4px 0 0 4px;
     color: #fff;
@@ -36,11 +36,11 @@
     .info-group {
         flex-direction: column;
     }
-    .list-item-number {
+    .episode-item-number {
         border-radius:4px 4px 0 0;
     }
 }
 
-.list-item-name {
+.episode-item-name {
     padding: 5px;
 }

@@ -19,7 +19,7 @@
   "bugs": {
     "url": "https://github.com/Viapatis/RMdb/issues"
   },
-  "homepage": "/",
+  "homepage": ".",
   "dependencies": {
     "@reduxjs/toolkit": "^1.6.2",
     "@types/jest": "^27.0.2",

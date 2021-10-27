@@ -3,6 +3,7 @@ import EpisodeList from './EpisodeList';
 import { useAppSelector } from '../store/hooks'
 import { getSeasonsAndEpisode } from '../lib/tools';
 import {EpisodeData} from '../lib/apiTypes'
+import '../styles/EpisodeListGroup.css'
 const EpisodeListGroup: FC<{}> = props => {
     const episodesData = useAppSelector(state => state.main.episodes);
     const sort = useAppSelector(state => state.filter.episode.sort);
@@ -10,9 +11,9 @@ const EpisodeListGroup: FC<{}> = props => {
     const seasonsData = sortEpisodes(sort, getSeasons(Array.from(seasons.values()), episodesData));
    
     return (
-        <div className='episode-list-group' >
+        <ul className='episode-list-group' >
             {seasonsData.map((seasonData, i) => <EpisodeList key={`S${seasons[i]}`} seasonName={seasons[i]} data={seasonData} />)}
-        </div>
+        </ul>
 
     )
 }

@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { useHistory } from "react-router-dom";
+import { useUpdatingPath } from './hooks';
 import { getSeasonsAndEpisode } from '../lib/tools';
 import '../styles/EpisodeListItem.css'
 interface EpisodeListItemProps {
@@ -11,21 +11,21 @@ interface EpisodeListItemProps {
 
 const EpisodeListItem: FC<EpisodeListItemProps> = props => {
     const { id, air_date, episodeAndSeason, name } = props;
-    const history = useHistory();
+    const updatePath = useUpdatingPath();
     const { episode } = getSeasonsAndEpisode(episodeAndSeason);
     const handleEpisodeListItemClick = () => {
-        history.push(`/episode/${id}`);
+        updatePath(`/episode/${id}`);
     }
     return (
-        <div className='list-item' >
+        <li className='episode-item' >
             <div className='info-group base-info' onClick={handleEpisodeListItemClick}>
-                <div className='list-item-number'>Episode {+episode}</div>
-                <div className='list-item-name'>{name}</div>
+                <span className='episode-item-number'>Episode {+episode}</span>
+                <span className='episode-item-name'>{name}</span>
             </div>
             <div className='info-group sub-info'>
-                <div className='list-item-airdate'>Air date:{air_date}</div>
+                <div className='episode-item-airdate'>Air date:{air_date}</div>
             </div>
-        </div>
+        </li>
     )
 }
 export default EpisodeListItem;

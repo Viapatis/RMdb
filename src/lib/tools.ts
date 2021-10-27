@@ -9,12 +9,7 @@ export function getSeasonsAndEpisode(episodeAndStr: string) {
     const matchArray = episodeAndStr.match(/S(\d+)E(\d+)/) as RegExpMatchArray;
     return { episode: matchArray[2], season: matchArray[1] }
 }
-export function genQueryObj(query: string) {
-    const queryParams = query.split('&').map(query => query.split('='));
-    const obj = {} as Record<string, string>;
-    queryParams.forEach(queryParam => obj[queryParam[0]] = queryParam[1]);
-    return obj;
-}
+
 export function getIdFromUrl(url: string) {
     return +url.split('/').slice(-1)[0];
 }
@@ -25,6 +20,7 @@ export function getPageFromUrl(url: string | null) {
 export function checkInfo(info1: Info, info2: Info): boolean {
     return (info1.next) as number === (info2.prev) as number + 1 && info1.count === info2.count && info1.pages === info2.pages;
 }
+
 export function replaceUrls(data: typesOfDataReceived<CharacterData | EpisodeData | LocationData> | Info) {
     if ('results' in data) {
         replaceUrls(data.results);

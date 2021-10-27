@@ -1,24 +1,31 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { EpisodeData, CharacterData, LocationData, EpisodeFilters, InfoWrap, Info } from '../../lib/apiTypes'
+import { EpisodeData, CharacterData, LocationData, InfoWrap, Info, FilterParams } from '../../lib/apiTypes'
 import { replaceUrls, checkInfo } from '../../lib/tools'
 import api from '../../lib/api'
 export interface MainState {
-    loadAllowed: boolean,
+    pageLoadAllowed: boolean,
     episodes: EpisodeData[],
     characters: CharacterData[],
     locations: LocationData[],
+    episode: EpisodeData | null,
+    character: CharacterData | null,
+    location: LocationData | null,
     requestInfo: {
         status: string,
         err: string,
         curId: string
     }
-    info: Info
+    info: Info,
+    urlSerch: FilterParams
 }
 const initialState = {
-    loadAllowed: true,
+    pageLoadAllowed: true,
     episodes: [],
     characters: [],
     locations: [],
+    episode: null,
+    character: null,
+    location: null,
     requestInfo: {
         status: '',
         err: '',
@@ -29,16 +36,17 @@ const initialState = {
         pages: 0,
         next: null,
         prev: null
-    }
+    },
+    urlSerch: {}
 } as MainState;
 
 export const getEpisodesByFilter = createAsyncThunk<
     InfoWrap<EpisodeData>,
-    EpisodeFilters | undefined,
+    FilterParams | undefined,
     { rejectValue: string }
 >(
     'main/getEpisodesByFilter',
-    async (params: EpisodeFilters | undefined, thunkAPI) => {
+    async (params: FilterParams | undefined, thunkAPI) => {
         try {
             const response = await api.getEpisodesByFilter(params);
             replaceUrls(response);
@@ -60,6 +68,7 @@ export const getEpisodeWithCharacters = createAsyncThunk<
             const episode = await api.getEpisodeById(id);
             replaceUrls(episode);
             const characters = await api.getCharactersByIds(episode.characters as number[]);
+            replaceUrls(characters);
             return { episode: episode, characters: characters };
         }
         catch (err) {
@@ -97,7 +106,7 @@ export const getLocationsWithCharacters = createAsyncThunk<
             const location = await api.getLocationById(id);
             replaceUrls(location);
             const characters = await api.getCharactersByIds(location.residents as number[]);
-
+            replaceUrls(characters);
             return { charcaters: characters, location: location };
         } catch (err) {
             return thunkAPI.rejectWithValue((err as Error).message);
@@ -109,14 +118,15 @@ const mainSlice = createSlice({
     name: 'main',
     initialState,
     reducers: {
-        setLoadAllowed(state, action: PayloadAction<boolean>) {
-            state.loadAllowed = action.payload;
+        setUrlSerch(state, action: PayloadAction<FilterParams>) {
+            state.urlSerch = action.payload;
         }
     },
     extraReducers: (builder) => {
         builder.addCase(getEpisodesByFilter.fulfilled, (state, action) => {
             const response = action.payload;
-            state.episodes = checkInfo({...state.info}, response.info) ?
+            state.pageLoadAllowed = true;
+            state.episodes = checkInfo({ ...state.info }, response.info) ?
                 [...state.episodes, ...response.results] :
                 [...response.results];
             state.info = response.info;
@@ -141,8 +151,9 @@ const mainSlice = createSlice({
             }
         })
         builder.addCase(getCharactersWithLocation.fulfilled, (state, action) => {
-            state.characters = [action.payload.charcater];
-            state.locations = [action.payload.location];
+            state.character = action.payload.charcater;
+            state.location = action.payload.location;
+            state.pageLoadAllowed = false;
             state.requestInfo = {
                 status: action.meta.requestStatus,
                 err: '',
@@ -165,8 +176,9 @@ const mainSlice = createSlice({
 
         })
         builder.addCase(getLocationsWithCharacters.fulfilled, (state, action) => {
-            state.locations = [action.payload.location];
+            state.location = action.payload.location;
             state.characters = action.payload.charcaters;
+            state.pageLoadAllowed = false;
             state.requestInfo = {
                 status: action.meta.requestStatus,
                 err: '',
@@ -189,8 +201,9 @@ const mainSlice = createSlice({
 
         })
         builder.addCase(getEpisodeWithCharacters.fulfilled, (state, action) => {
-            state.episodes = [action.payload.episode];
+            state.episode = action.payload.episode;
             state.characters = action.payload.characters;
+            state.pageLoadAllowed = false;
             state.requestInfo = {
                 status: action.meta.requestStatus,
                 err: '',
@@ -214,5 +227,5 @@ const mainSlice = createSlice({
         })
     }
 })
-export const { setLoadAllowed } = mainSlice.actions;
+export const { setUrlSerch } = mainSlice.actions
 export default mainSlice.reducer;

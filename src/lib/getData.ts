@@ -2,33 +2,34 @@ import {
     QueryParams,
     QueryType,
     InfoWrap,
-    FilterParams,
     LocationData,
     EpisodeData,
     EndPoint,
     CharacterData,
+    FILTERS,
+    FilterParams
 } from './apiTypes'
 const ROOT_URL = 'https://rickandmortyapi.com/api';
 
 function createQueryString(query: QueryParams, type: QueryType) {
     switch (type) {
         case 'filtring-object':
-            return `?${new URLSearchParams(query as Record<string, string>)}`;
+            return typeof query === `undefined` ? '' : `?${new URLSearchParams(query as Record<string, string>)}`;
         default:
             return `${query}`
     }
 }
-function getQueryType(query: QueryParams): QueryType | 'inavlid' {
+function getQueryType(query: QueryParams, endPoint: EndPoint): QueryType | 'invalid' {
     if (typeof query === 'number')
         return 'single';
     if (typeof query === 'undefined')
         return 'filtring-object'
     if (Array.isArray(query) && query.every(num => typeof num === 'number'))
         return 'array'
-    if (Object.keys(query).every(key => typeof key === 'string') && !Array.isArray(query))
-        if (Object.keys(query).every(key => typeof (query as Record<string, string>)[key] === 'string'))
+    if (!Array.isArray(query))
+        if (checkFilters(query as FilterParams, endPoint))
             return `filtring-object`
-    return `inavlid`;
+    return `invalid`;
 }
 function getResponseType<Type>(type: QueryType, response: Promise<any>) {
     switch (type) {
@@ -56,8 +57,8 @@ export async function getData(endPoint: 'character'): Promise<InfoWrap<Character
 export async function getData(endPoint: 'location'): Promise<InfoWrap<LocationData>>;
 export async function getData(endPoint: 'episode'): Promise<InfoWrap<EpisodeData>>;
 export async function getData(endPoint: EndPoint, query?: QueryParams) {
-    const queryType = getQueryType(query);
-    if (queryType === 'inavlid')
+    const queryType = getQueryType(query, endPoint);
+    if (queryType === 'invalid')
         return Promise.reject(new Error('getData failed.\tInvalid QueryParams'));
     const queryString = createQueryString(query, queryType);
     const response = await fetch(`${ROOT_URL}/${endPoint}/${queryString}`);
@@ -73,7 +74,7 @@ export async function getData(endPoint: EndPoint, query?: QueryParams) {
         }
     } else {
         if (response.status === 404)
-            return Promise.reject(new Error(generateErrMessage(endPoint,queryType,query)));
+            return Promise.reject(new Error(generateErrMessage(endPoint, queryType, query)));
         return Promise.reject(new Error('getData failed.'));
     }
 }
@@ -84,9 +85,14 @@ function generateErrMessage(endPont: EndPoint, type: QueryType, query: QueryPara
         case 'single':
             return message.replace('$$', 'id');
         case 'filtring-object':
-            return message.replace('$$', Object.keys((query as FilterParams)).join(','));
+            return message.replace('$$', [...Object.keys(query as object)].join(','));
     }
 }
+function checkFilters(query: FilterParams, endPoint: EndPoint) {
+    const keys = [...Object.keys(query)];
+    return keys.every(key => {
+        return FILTERS.get(endPoint)?.has(key) && typeof query[key] === 'string' && typeof key === 'string';;
+    })
 
-
+}
 

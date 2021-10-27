@@ -5,6 +5,7 @@ interface Filter {
     search: string,
     sort: sortValue,
     btnValue: boolean
+    options: string[]
 }
 interface FilterState {
     [index: string]: Filter,
@@ -14,7 +15,8 @@ const initialState = {
     episode: {
         search: '',
         sort: 'relese',
-        btnValue: true
+        btnValue: true,
+        options: ['name', 'relese']
     } as Filter
 } as FilterState;
 
@@ -36,7 +38,7 @@ const filterSlice = createSlice({
             const { name, value } = action.payload;
             if (name in state)
                 state[name].btnValue = !value;
-        },
+        }
     }
 })
 export const { setSerachString, setBtnValue, setSortString } = filterSlice.actions;

@@ -2,12 +2,12 @@ export type QueryType = 'single' | 'array' | 'filtring-object';
 export type EndPoint = 'location' | 'character' | 'episode';
 export type CharacterStatus = 'Alive' | 'Dead' | 'unknown';
 export type CharacterGender = 'Female' | 'Male' | 'Genderless' | 'unknown';
-export interface Origin {
+export interface Location {
     name: string,
     url: string | number,
 }
 
-export interface GenPropObj extends Origin {
+export interface GenPropObj extends Location {
     id: number,
     created: string,
     error?: string
@@ -18,8 +18,8 @@ export interface CharacterData extends GenPropObj {
     species: string,
     type: string,
     gender: CharacterGender,
-    origin: Origin,
-    location: Origin,
+    origin: Location,
+    location: Location,
     image: string,
     episode: string[] | number[]
 }
@@ -47,14 +47,18 @@ export interface EpisodeData extends GenPropObj {
     episode: string,
     characters: string[] | number[]
 }
-export interface EpisodeFilters extends Pick<GenFilterObj, 'name'> {
+export interface EpisodeFilters extends Omit<GenFilterObj, 'type'> {
     episode?: string
 }
+export const CHARACTER_FILTERS = new Set(['name', 'type', 'page', 'status', 'gender', 'species']);
+export const LOCATION_FILTERS = new Set(['name', 'type', 'page', 'demension']);
+export const EPISODE_FILTERS = new Set(['name', 'page', 'episode']);
+export const FILTERS = new Map([['episode', EPISODE_FILTERS], ['character', CHARACTER_FILTERS], ['location', LOCATION_FILTERS]]);
 export interface Info {
     count: number,
     pages: number,
-    next: string|null|number,
-    prev: string|null|number
+    next: string | null | number,
+    prev: string | null | number
 }
 export interface InfoWrap<T> extends Pick<GenPropObj, 'error'> {
     info: Info,

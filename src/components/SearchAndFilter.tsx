@@ -1,27 +1,32 @@
 import { FC, ChangeEvent, MouseEvent, KeyboardEvent } from 'react';
 import { useAppSelector, useAppDispatch } from '../store/hooks';
 import { setSerachString, setSortString, sortValue, setBtnValue } from '../store/slices/Filter'
-import { useHistory } from 'react-router';
+import { useUpdatingPath } from './hooks';
 import '../styles/SearchAndFilter.css'
-const SearchAndFilter: FC<{}> = props => {
-    const { sort, btnValue, search } = useAppSelector(state => state.filter.episode);
+interface SearchAndFilterProps {
+    type: 'episode'
+}
+const SearchAndFilter: FC<SearchAndFilterProps> = props => {
+    const type = props.type;
+    const { sort, btnValue, search, options } = useAppSelector(state => state.filter[type]);
     const err = useAppSelector(state => state.main.requestInfo.err);
     const displayErr = err ? '' : ' hide';
-    const history = useHistory();
     const dispatch = useAppDispatch();
+    const updatingPath = useUpdatingPath();
     const handleSearchOnChange = (event: ChangeEvent<HTMLInputElement>) => {
-        dispatch(setSerachString({ name: 'episode', value: event.target.value }));
+        dispatch(setSerachString({ name: type, value: event.target.value }));
     }
     const handleBtnClick = (event: MouseEvent<HTMLButtonElement>) => {
-        history.push(`/${search ? `?name=${search}` : ''}`);
-        dispatch(setBtnValue({ name: 'episode', value: btnValue }))
+        updatingPath({ name: search });
+        dispatch(setBtnValue({ name: type, value: btnValue }));
     }
     const handleInputEnter = (event: KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Enter')
-            history.push(`/${search ? `?name=${search}` : ''}`);
+        if (event.key === 'Enter') {
+            updatingPath({ name: search });
+        }
     }
     const handleSortOnChange = (event: ChangeEvent<HTMLSelectElement>) => {
-        dispatch(setSortString({ name: 'episode', value: event.target.value as sortValue }));
+        dispatch(setSortString({ name: type, value: event.target.value as sortValue }));
     }
 
     return (
@@ -40,8 +45,7 @@ const SearchAndFilter: FC<{}> = props => {
                 <span className={'search-err' + displayErr} >{err}</span>
             </div>
             <select value={sort} onChange={handleSortOnChange} className='filter-select select'>
-                <option className='filter-option' value='name'>name</option>
-                <option className='filter-option' value='relese'>relese</option>
+                {options.map(opt => <option key={opt} className='filter-option' value={opt}>{opt}</option>)}
             </select>
         </div>
     );

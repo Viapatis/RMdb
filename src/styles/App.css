@@ -3,6 +3,11 @@ body {
     font-family: "Open+Sans", sans-serif
 }
 
+ul {
+    padding: 0;
+    list-style: none;
+}
+
 .button, .select {
     background-color: #00b3cb;
     color: #fff;
@@ -17,9 +22,11 @@ body {
 .button:hover, .select:hover {
     background-color: #0086a3;
 }
-.filter-option:focus{
+
+.filter-option:focus {
     background-color: #00b3cb;
 }
+
 .input-text {
     vertical-align: middle;
     height: 30px;
@@ -27,7 +34,8 @@ body {
     border-radius: 3px;
     box-sizing: border-box;
 }
-.input-text:focus{
-   outline-width:0 ;
-   border-color: #0086a3;
+
+.input-text:focus {
+    outline-width: 0;
+    border-color: #0086a3;
 }
