@@ -1,7 +1,8 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
-import { CharacterData, Location } from '../lib/apiTypes'
-import '../styles/CharactersItem.css'
+import { CharacterData, Location } from '../lib/apiTypes';
+import { useUpdatingPath } from './hooks';
+import '../styles/CharactersItem.css';
 interface CharacterstItemProps {
     data: CharacterData
     list: boolean
@@ -16,10 +17,14 @@ const CharactersItem: FC<CharacterstItemProps> = props => {
     const { data, list } = props;
     const { name, image, gender, status, type, species, origin, location, id } = data;
     const listClass = list ? '-list' : '';
+    const updatePath = useUpdatingPath();
     const charsInfo = getInfo({ gender, status, type, species });
     const locsInfo = getInfo({ origin, location })
+    const itemOnClickHandle = () => {
+        updatePath(`/character/${id}`)
+    }
     return (
-        <div className={`character-item${listClass}`}>
+        <div className={`character-item${listClass}`} onClick={itemOnClickHandle}>
             <div className={`character-item${listClass}-main`}>
                 <img className={`character-item${listClass}-image`} src={image} alt='character'></img>
                 <h4 className={`character-item${listClass}-name`}>{name}</h4>
@@ -37,22 +42,22 @@ const CharactersItem: FC<CharacterstItemProps> = props => {
                     })
                 }
             </div>
-            {
-                list ? <div className='character-item-list-locations'>
-                    {
-                        locsInfo.map(locInfo => {
-                            const { infoName, infoValue, url } = locInfo;
-                            return (
-                                <div key={`CH${id + infoName}`} className={`character-item-list-location`}>
-                                    <span className='info_location-name'>{infoName}</span>
-                                    <Link to={`/location/${url}`} className='info_location-value'>{infoValue}</Link>
-                                </div>
-                            )
-                        })
-                    }
-                </div> : ''
-            }
-        </div>
+{
+    list ? <div className='character-item-list-locations'>
+        {
+            locsInfo.map(locInfo => {
+                const { infoName, infoValue, url } = locInfo;
+                return (
+                    <div key={`CH${id + infoName}`} className={`character-item-list-location`}>
+                        <span className='info_location-name'>{infoName}</span>
+                        <Link to={`/location/${url}`} className='info_location-value'>{infoValue}</Link>
+                    </div>
+                )
+            })
+        }
+    </div> : ''
+}
+        </div >
     );
 };
 function getInfo(data: InfoData | LocationInfo) {

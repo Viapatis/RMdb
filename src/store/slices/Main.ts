@@ -120,6 +120,14 @@ const mainSlice = createSlice({
     reducers: {
         setUrlSerch(state, action: PayloadAction<FilterParams>) {
             state.urlSerch = action.payload;
+        },
+        clearRecivedData(state, action: PayloadAction<undefined>) {
+            state.characters = [];
+            state.locations = [];
+            state.episodes=[]
+            state.character=null;
+            state.location=null;
+            state.episode=null;
         }
     },
     extraReducers: (builder) => {
@@ -227,5 +235,5 @@ const mainSlice = createSlice({
         })
     }
 })
-export const { setUrlSerch } = mainSlice.actions
+export const { setUrlSerch,clearRecivedData } = mainSlice.actions
 export default mainSlice.reducer;

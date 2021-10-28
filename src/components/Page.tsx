@@ -37,7 +37,14 @@ const Page: FC<{}> = props => {
             <Header></Header>
             <div className="page-content">
                 {children}
-                {status === 'pending' ? <div className='page-load'>load</div> : ''}
+                {status === 'pending' ? <div className='page-load'>
+                    <div className="load-ring">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        </div>
+                    </div> : ''}
             </div>
         </div>
     );

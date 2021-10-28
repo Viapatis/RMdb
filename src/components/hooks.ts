@@ -4,7 +4,8 @@ import {
     getLocationsWithCharacters,
     getEpisodesByFilter,
     getEpisodeWithCharacters,
-    setUrlSerch
+    setUrlSerch,
+    clearRecivedData
 } from '../store/slices/Main'
 import { useLocation, useHistory } from 'react-router-dom';
 import { FilterParams } from '../lib/apiTypes';
@@ -18,6 +19,7 @@ export function useLoadingData() {
         const pageName = getPageName(pathname);
         if (pageName !== 'home') {
             const id = getId(pathname, pageName);
+            console.log(pageName, id);
             switch (pageName) {
                 case 'episode':
                     dispatch(getEpisodeWithCharacters(id));
@@ -26,7 +28,7 @@ export function useLoadingData() {
                     dispatch(getLocationsWithCharacters(id));
                     break;
                 case 'character':
-                    getCharactersWithLocation(id);
+                    dispatch(getCharactersWithLocation(id));
                     break;
                 default:
                     break;
@@ -44,8 +46,10 @@ export function useUpdatingPath() {
     const history = useHistory();
     const location = useLocation();
     return (pathname: string | FilterParams, search?: FilterParams) => {
-        if (location.pathname !== pathname && pathname && typeof pathname === 'string')
+        if (location.pathname !== pathname && pathname && typeof pathname === 'string') {
             history.push(pathname);
+            dispatch(clearRecivedData());
+        }
         dispatch(setUrlSerch(search ? search : typeof pathname !== 'string' ? pathname : {}));
     }
 }
