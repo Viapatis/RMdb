@@ -30,8 +30,8 @@ export function replaceUrls(data: typesOfDataReceived<CharacterData | EpisodeDat
         data.forEach((item) => replaceUrls(item));
     if ('gender' in data) {
         data.episode = data.episode.map((url) => getIdFromUrl(url as string));
-        data.origin.url = getIdFromUrl(data.url as string);
-        data.location.url = getIdFromUrl(data.url as string);
+        data.origin.url = getIdFromUrl(data.origin.url as string);
+        data.location.url = getIdFromUrl(data.location.url as string);
     }
     if ('residents' in data) {
         data.residents = data.residents.map((url) => getIdFromUrl(url as string));
