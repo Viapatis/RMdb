@@ -36,11 +36,11 @@ export interface CharactersFilter extends GenFilterObj {
 }
 export interface LocationData extends GenPropObj {
     type: string,
-    demension: string,
+    dimension: string,
     residents: string[] | number[]
 }
 export interface LocationFilters extends GenFilterObj {
-    demension?: string
+    dimension?: string
 }
 export interface EpisodeData extends GenPropObj {
     air_date: string,
@@ -51,7 +51,7 @@ export interface EpisodeFilters extends Omit<GenFilterObj, 'type'> {
     episode?: string
 }
 export const CHARACTER_FILTERS = new Set(['name', 'type', 'page', 'status', 'gender', 'species']);
-export const LOCATION_FILTERS = new Set(['name', 'type', 'page', 'demension']);
+export const LOCATION_FILTERS = new Set(['name', 'type', 'page', 'dimension']);
 export const EPISODE_FILTERS = new Set(['name', 'page', 'episode']);
 export const FILTERS = new Map([['episode', EPISODE_FILTERS], ['character', CHARACTER_FILTERS], ['location', LOCATION_FILTERS]]);
 export interface Info {
