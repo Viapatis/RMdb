@@ -22,6 +22,8 @@
 .character-item-list {
     padding-bottom: 10px;
     margin: 0 auto 20px auto;
+    display: flex;
+    flex-direction: column;
 }
 
 .character-item-list:hover {
@@ -60,6 +62,11 @@
     width: 40%;
     margin: auto 0 auto 20px;
 }
+.character-item-list-sub{
+    display: flex;
+    flex-direction: column;
+    flex-grow:1;
+}
 .character-item-sub{
     margin-top: 70px;
     display: flex;
@@ -70,7 +77,12 @@
     flex-direction: column;
     text-align: center;
 }
-
+.character-item-list-locations {
+    display: flex;
+    flex-direction: column;
+    flex-grow:2;
+    justify-content: end;
+}
 .character-item-list-info_item, .character-item-info_item {
     display: grid;
 }

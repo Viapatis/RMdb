@@ -2,7 +2,7 @@
     margin-bottom: 10px;
     box-shadow: 0 1px 5px rgb(0 0 0 / 40%);
     box-sizing: border-box;
-    border-radius: 0 0 5px 5px;
+ 
 }
 
 .episode-header-number {
@@ -11,7 +11,6 @@
     border-radius: 0 0 5px 5px;
     padding-left: 20px;
     padding-top:5px;
-    margin-top: 0px;
 }
 .episode-header-content {
     padding-left: 40px;

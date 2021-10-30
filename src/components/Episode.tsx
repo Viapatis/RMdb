@@ -19,8 +19,7 @@ const Episode: FC<{}> = props => {
                 </div>
             </div>
             <div className='episode-contenent'>
-                <h2 className='characters-title'>Episode Characters</h2>
-                <CharactersList />
+                <CharactersList showLocation={true} title={'Episode Characters'} />
             </div>
         </div>
     );

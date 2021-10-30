@@ -6,6 +6,7 @@ import SearchAndFilter from './SearchAndFilter';
 import EpisodeListGroup from './EpisodeListGroup';
 import Episode from './Episode';
 import Charatcer from './Character'
+import Location from './Location'
 export const Main: FC<{}> = props => {
     const loadData = useLoadingData();
     useEffect(() => {
@@ -27,7 +28,7 @@ export const Main: FC<{}> = props => {
                         <Episode />
                     </Route>
                     <Route path='/character'><Charatcer /></Route>
-                    <Route path='/location'></Route>
+                    <Route path='/location'><Location/></Route>
                 </Switch>
             </Page>
 

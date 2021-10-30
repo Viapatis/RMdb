@@ -1,15 +1,14 @@
 import { FC } from 'react';
 import { useUpdatingPath } from './hooks';
 import '../styles/LocationItem.css';
+import { LocationData } from '../lib/apiTypes'
 interface LocationtItemProps {
-    name: string,
-    dimension: string,
-    type: string,
-    id: number,
+    data: LocationData,
     list: boolean
 }
 const LocationItem: FC<LocationtItemProps> = props => {
-    const { name, dimension, type, list, id } = props;
+    const { data, list } = props;
+    const { name, dimension, type, id } = data;
     const nameWithoutDemension = name.replace(/\s*\(.*\)/, '');
     const listClass = list ? '-list' : '';
     const updatePath = useUpdatingPath();

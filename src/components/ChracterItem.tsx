@@ -4,8 +4,9 @@ import { CharacterData, Location } from '../lib/apiTypes';
 import { useUpdatingPath } from './hooks';
 import '../styles/CharacterItem.css';
 interface CharactertItemProps {
-    data: CharacterData
-    list: boolean
+    data: CharacterData,
+    list: boolean,
+    showLocation: boolean
 }
 interface InfoData extends Pick<CharacterData, 'gender' | 'status' | 'type' | 'species'> {
     [index: string]: string;
@@ -14,12 +15,13 @@ interface LocationInfo extends Pick<CharacterData, 'origin' | 'location'> {
     [index: string]: Location;
 }
 const CharacterItem: FC<CharactertItemProps> = props => {
-    const { data, list } = props;
+    const { data, list, showLocation } = props;
     const { name, image, gender, status, type, species, origin, location, id } = data;
     const listClass = list ? '-list' : '';
     const updatePath = useUpdatingPath();
     const charsInfo = getInfo({ gender, status, type, species });
     const locsInfo = getInfo({ origin, location })
+        .filter((locInfo) => !(!showLocation && locInfo.infoName === 'Location'));
     const itemOnClickHandle = () => {
         updatePath(`/character/${id}`)
     }
@@ -51,7 +53,12 @@ const CharacterItem: FC<CharactertItemProps> = props => {
                                 return (
                                     <div key={`CH${id + infoName}`} className={`character-item-list-location`}>
                                         <span className='info_location-name'>{infoName}</span>
-                                        <Link to={`/location/${url}`} className='info_location-value'>{infoValue}</Link>
+                                        <Link
+                                            to={`/location/${url}`}
+                                            className='info_location-value'
+                                            onClick={(event) => { event.stopPropagation() }}>
+                                            {infoValue}
+                                        </Link>
                                     </div>
                                 )
                             })

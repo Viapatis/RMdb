@@ -1,30 +1,60 @@
-.location-item-list {
+.location-item-list, .location-item {
     display: flex;
     flex-direction: column;
-    box-shadow: 0 1px 8px rgb(0 0 0 / 70%), 0 0 0 1px rgb(0 0 0 / 40%);
+    
+}
+
+.location-item-list {
     border-radius: 4px;
     font-size: 12px;
-  
+    box-shadow: 0 1px 8px rgb(0 0 0 / 70%), 0 0 0 1px rgb(0 0 0 / 40%);
 }
 
-.location-item-list-main {
+.location-item {
+    border-radius: 0 0 5px 5px;
+    box-shadow: 0 1px 5px rgb(0 0 0 / 40%);
+}
+
+.location-item-list-main, .location-item-main {
     display: flex;
-}
-
-.location-item-list_type::after {
-    content: ':';
-    margin: 0 2px;
-}
-.location-item-list_dimension{
-    padding:5px
 }
 
 .location-item-list-main {
     font-size: 14px;
-    background: #00b3cb;
-    color: #fff;
     padding: 10px;
     border-radius: 0 0 4px 4px;
+    background: #00b3cb;
+    color: #fff;
+}
+
+.location-item-main {
+    font-size: 2em;
+    padding: 10px 10px 10px 40px;
+}
+
+.location-item-list_type::after, .location-item_type::after {
+    content: ':';
+}
+
+.location-item-list_type::after {
+    margin: 0 2px;
+}
+
+.location-item_type::after {
+    margin: 0 10px;
+}
+
+.location-item-list_dimension {
+    padding: 5px;
+}
+
+.location-item_dimension {
+    padding: 5px 5px 0 5px;
+    border-radius: 0 0 5px 5px;
+    font-size: 1.5em;
+    background: #00b3cb;
+    color: #fff;
+    margin-bottom: 1.;
 }
 
 .location-item-list:hover {

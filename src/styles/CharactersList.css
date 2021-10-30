@@ -1,5 +1,10 @@
-.characters{
-    padding: 20px;
+.characters-list-main{
     display: flex;
     flex-wrap: wrap;
+}
+.characters{
+    padding: 20px;
+}
+.characters-list-title{
+    text-align: center;
 }
