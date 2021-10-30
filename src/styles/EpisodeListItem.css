@@ -29,6 +29,7 @@
     border-radius: 4px 0 0 4px;
     color: #fff;
     padding: 5px;
+    min-width: 70px;
 }
 
 @media (max-width: 800px) {
