@@ -1,16 +1,16 @@
-.episode {}
-
 .episode-header {
     margin-bottom: 10px;
     box-shadow: 0 1px 5px rgb(0 0 0 / 40%);
     box-sizing: border-box;
+ 
 }
 
 .episode-header-number {
     background: #00b3cb;
     color: #fff;
-    border-radius: 5px 5px 0;
+    border-radius: 0 0 5px 5px;
     padding-left: 20px;
+    padding-top:5px;
 }
 .episode-header-content {
     padding-left: 40px;
@@ -18,4 +18,8 @@
 .episode-header-airdate{
     padding-bottom: 10px;
     margin: 0;
+}
+.characters-title{
+    padding-left: 40px;
+    text-align: center;
 }

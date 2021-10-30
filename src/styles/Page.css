@@ -1,8 +1,13 @@
 .page-content {
     max-width: 1000px;
-    margin: 0 auto;
+    margin: 70px auto  0 auto;
+    background: white;
+    min-height: 600px;
 }
-
+.page{
+    background: #d2c9b8;
+    min-height: 100%;
+}
 .load-ring {
     display: inline-block;
     position: relative;

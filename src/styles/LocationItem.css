@@ -1,0 +1,33 @@
+.location-item-list {
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 1px 8px rgb(0 0 0 / 70%), 0 0 0 1px rgb(0 0 0 / 40%);
+    border-radius: 4px;
+    font-size: 12px;
+  
+}
+
+.location-item-list-main {
+    display: flex;
+}
+
+.location-item-list_type::after {
+    content: ':';
+    margin: 0 2px;
+}
+.location-item-list_dimension{
+    padding:5px
+}
+
+.location-item-list-main {
+    font-size: 14px;
+    background: #00b3cb;
+    color: #fff;
+    padding: 10px;
+    border-radius: 0 0 4px 4px;
+}
+
+.location-item-list:hover {
+    cursor: pointer;
+    box-shadow: 0 1px 8px #00b3cb9c, 0 0 0 1px rgb(0 0 0 / 40%);
+}

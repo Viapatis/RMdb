@@ -8,7 +8,7 @@ const Page: FC<{}> = props => {
     const search = useAppSelector(state => state.main.urlSerch)
     const info = useAppSelector(state => state.main.info);
     const { requestInfo, pageLoadAllowed } = useAppSelector(state => state.main);
-    const status = requestInfo.status;
+    const { status } = requestInfo;
     const updatePath = useUpdatingPath();
     const onScroll = (event: Event) => {
         if (event.currentTarget) {
@@ -17,8 +17,9 @@ const Page: FC<{}> = props => {
                 const { scrollHeight, scrollTop, clientHeight } = scrollingElement;
                 if (scrollTop > scrollHeight - clientHeight - 1)
                     if (info.next && status !== 'pending') {
-                        const serchParams = { ...search };
-                        serchParams.page = '' + info.next
+                        const serchParams = status === 'rejected' ?
+                            { page: '' + info.next } :
+                            { ...search, page: '' + info.next };
                         updatePath(serchParams);
                     }
             }
@@ -43,8 +44,8 @@ const Page: FC<{}> = props => {
                         <div></div>
                         <div></div>
                         <div></div>
-                        </div>
-                    </div> : ''}
+                    </div>
+                </div> : ''}
             </div>
         </div>
     );

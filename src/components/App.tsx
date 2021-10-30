@@ -5,7 +5,7 @@ import '../styles/App.css'
 export const App: FC<{}> = props => {
     const projectName = useAppSelector(state => state.app.projectInfo.name);
     return (
-        <div className={`app-${projectName}`}>
+        <div className={`app ${projectName.replace(/([A-Z][a-z])/g,'-$1')}`}>
             <Main />
         </div>
     );

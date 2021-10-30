@@ -1,0 +1,120 @@
+.character-item-list, .character-item {
+    box-shadow: 0 1px 8px rgb(0 0 0 / 70%), 0 0 0 1px rgb(0 0 0 / 40%);
+    background: #00b3cb;
+    color: #fff;
+}
+
+.character-item {
+    display: flex;
+    padding: 0 5px 5px 8px;
+}
+
+.character-item-main {
+    display: flex;
+    flex-direction: column;
+    margin-right: 20px;
+}
+
+.character-item-info {
+    margin-top: 60px;
+}
+
+.character-item-list {
+    padding-bottom: 10px;
+    margin: 0 auto 20px auto;
+}
+
+.character-item-list:hover {
+    cursor: pointer;
+    box-shadow: 0 1px 8px #00b3cb9c, 0 0 0 1px rgb(0 0 0 / 40%);
+}
+
+.character-item-image {
+    width: 300px;
+}
+
+.character-item-list-image {
+    width: 250px;
+}
+
+.character-item-list-name, .character-item-name {
+    text-align: center;
+}
+
+.character-item-list-name {
+    text-align: center;
+    margin: 10px 0;
+}
+
+.character-item-name {
+    text-align: center;
+    margin: 15px 0;
+    font-size: 2em;
+}
+
+.character-item-list-info {
+    margin: 20px 0;
+}
+
+.character-item-info {
+    width: 40%;
+    margin: auto 0 auto 20px;
+}
+.character-item-sub{
+    margin-top: 70px;
+    display: flex;
+    justify-content: center;
+}
+.character-item-list-location {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.character-item-list-info_item, .character-item-info_item {
+    display: grid;
+}
+.character-item-info_item {
+    grid-template-columns: 100px auto ;
+}
+.character-item-list-info_item {
+    width: 150px;
+    margin: auto;
+    grid-template-columns: 70px auto;
+}
+
+.character-item-info_item {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.info_location-name {
+    margin-bottom: 5px;
+}
+
+.character-item-list-location {
+    margin-bottom: 5px;
+}
+
+.info_item-name:first-child {
+    margin: auto 0;
+}
+
+@media (max-width: 800px) {
+    .character-item-sub{
+        margin-top: 20px;
+    }
+    .character-item {
+        flex-direction: column;
+    }
+    .character-item-image {
+        margin: auto;
+    }
+    .character-item-main {
+        margin-right: 0;
+    }
+    .character-item-info {
+        margin: 0 auto;
+    }
+    
+}

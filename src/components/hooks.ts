@@ -19,7 +19,6 @@ export function useLoadingData() {
         const pageName = getPageName(pathname);
         if (pageName !== 'home') {
             const id = getId(pathname, pageName);
-            console.log(pageName, id);
             switch (pageName) {
                 case 'episode':
                     dispatch(getEpisodeWithCharacters(id));
